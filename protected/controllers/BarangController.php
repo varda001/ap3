@@ -213,8 +213,17 @@ class BarangController extends Controller
      */
     public function actionHapus($id)
     {
-        $this->loadModel($id)->delete();
-
+        $barang = $this->loadModel($id);
+        HargaJual::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+        HargaJualMulti::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+        HargaJualRekomendasi::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+        InventoryBalance::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+        PembelianDetail::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+        PenjualanDetail::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+        StockOpnameDetail::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+        SupplierBarang::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+        $barang->delete();
+    
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : ['index']);
