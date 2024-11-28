@@ -218,10 +218,29 @@ class BarangController extends Controller
         HargaJualMulti::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
         HargaJualRekomendasi::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
         InventoryBalance::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+        
+        $pembelianDetails = PembelianDetail::model()->findAll('barang_id = :barang_id', array(':barang_id' => $id));
+        foreach ($pembelianDetails as $pembelianDetail) {
+            HargaPokokPenjualan::model()->deleteAll('pembelian_detail_id = :pembelian_detail_id', array(':pembelian_detail_id' => $pembelianDetail->id));
+        }
         PembelianDetail::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+
+        $penjualanDetails = PenjualanDetail::model()->findAll('barang_id = :barang_id', array(':barang_id' => $id));
+        foreach ($penjualanDetails as $penjualanDetail) {
+            HargaPokokPenjualan::model()->deleteAll('penjualan_detail_id = :penjualan_detail_id', array(':penjualan_detail_id' => $penjualanDetail->id));
+            PenjualanMultiHarga::model()->deleteAll('penjualan_detail_id = :penjualan_detail_id', array(':penjualan_detail_id' => $penjualanDetail->id));
+        }
         PenjualanDetail::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+
         StockOpnameDetail::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
         SupplierBarang::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+        AkmDetail::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+        DiskonBarang::model()->deleteAll('barang_bonus_id = :barang_id', array(':barang_id' => $id));
+        LabelRakCetak::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+        PoDetail::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+        //RekapAds::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+        SoDetail::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
+        TagBarang::model()->deleteAll('barang_id = :barang_id', array(':barang_id' => $id));
         $barang->delete();
     
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
